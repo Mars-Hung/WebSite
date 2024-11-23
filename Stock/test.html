@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票数据整合与筛选</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>股票数据整合与筛选</h1>
+
+        <!-- 筛选器区域 -->
+        <div v-for="(filter, index) in filters" :key="index" class="filter-group">
+            <select v-model="filter.field">
+                <option v-for="field in allFields" :key="field" :value="field">
+                    {{ field }}
+                </option>
+            </select>
+
+            <select v-model="filter.operator">
+                <option value=">">大于</option>
+                <option value="<">小于</option>
+                <option value="=">等于</option>
+            </select>
+
+            <input type="text" v-model="filter.value" placeholder="输入值" />
+
+            <button @click="removeFilter(index)" v-if="filters.length > 1">移除</button>
+        </div>
+        <button @click="addFilter">+ 添加筛选条件</button>
+
+        <!-- 表格 -->
+        <table>
+            <thead>
+                <tr>
+                    <th v-for="field in allFields" :key="field">{{ field }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in filteredData" :key="item.Code">
+                    <td v-for="field in allFields" :key="field">{{ item[field] }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
